@@ -1,15 +1,31 @@
 # 完整的模型训练套路(以CIFAR10为例)
 import time
 
-import torch.optim
 import torchvision
-from torch import nn
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
+from torchvision.transforms import transforms
 
-from model import *
+from day2.model import *
+from dataset import ImageTxtDataset
+# from day2.train_GPU_1 import train_data
+import os
+from pathlib import Path
+
+# Create the directory if it doesn't exist
+Path("model_save").mkdir(parents=True, exist_ok=True)
 
 # 准备数据集
+train_data = ImageTxtDataset(r"D:\dataset\train.txt",
+                             r"D:\dataset\train",
+                             transforms.Compose([transforms.Resize(256),
+                                                 transforms.RandomHorizontalFlip(),
+                                                 transforms.ToTensor(),
+                                                 transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                                      std=[0.229, 0.224, 0.225])
+                                                 ])
+                             )
+
 train_data = torchvision.datasets.CIFAR10(root="../dataset_chen",
                                          train=True,
                                          transform=torchvision.transforms.ToTensor(),
@@ -96,7 +112,7 @@ for i in range(epoch):
     total_test_step += 1
 
     # 保存每一轮训练模型
-    torch.save(chen,f"model_save\\chen_{i}.pth")
+    torch.save(chen, f"model_save\\chen_{i}.pth")
     print("模型已保存")
 
 writer.close()

@@ -1,7 +1,5 @@
-import torch
-import torchvision
 from PIL import Image
-from model import *
+from day2.model import *
 from torchvision import transforms
 
 image_path = "../Image/img.png"
